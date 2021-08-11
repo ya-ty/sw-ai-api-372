@@ -34,7 +34,7 @@ time_valid = time[split_time:]
 x_valid = series[split_time:]
 
 window_size = 60
-batch_size = 974
+batch_size = 32
 shuffle_buffer_size = 500
 
 #plt.figure(figsize=(10, 6))
@@ -78,11 +78,11 @@ model.compile(loss="categorical_crossentropy", optimizer="SGD", metrics=["accura
 
 #model.fit(dataset,epochs=100,verbose=0)
 
+model.fit(dataset)
 
-model.fit(dataset, batch_size=32, verbose=0, epochs=100)
+#model.predict(series[np.newaxis])
 
-#predictions = model.predict(x_train)
-#print(predictions)
+model.predict(series[32:974][np.newaxis])
 
 forecast=[]
 for time in range(len(series) - window_size):
@@ -90,13 +90,15 @@ for time in range(len(series) - window_size):
 forecast = forecast[split_time-window_size:]
 results = np.array(forecast)[:, 0, 0]
 
-print(results)
+
+
+#print(results)
 
 plt.figure(figsize=(10, 6))
 plot_series(time_valid, x_valid)
 plot_series(time_valid, results)
 
-#plt.show()
+plt.show()
 
 print(tf.keras.metrics.mean_absolute_error(x_valid, results).numpy())
 
